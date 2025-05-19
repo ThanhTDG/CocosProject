@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "68f6bf12-4733-4d25-9023-0ddfce041205",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "SwordBadge_Bg": {
+      "ver": "1.0.4",
+      "uuid": "14a61832-4e6d-4989-a386-e16d3e5a5a0c",
+      "rawTextureUuid": "68f6bf12-4733-4d25-9023-0ddfce041205",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 208,
+      "height": 215,
+      "rawWidth": 208,
+      "rawHeight": 215,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

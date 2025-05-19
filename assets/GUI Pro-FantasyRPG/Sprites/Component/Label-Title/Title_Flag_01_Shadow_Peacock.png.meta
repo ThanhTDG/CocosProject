@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "74a469f0-cc80-47c7-9de6-80637754609f",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "Title_Flag_01_Shadow_Peacock": {
+      "ver": "1.0.4",
+      "uuid": "4bcf7a28-d693-4a15-a727-13d52a997e66",
+      "rawTextureUuid": "74a469f0-cc80-47c7-9de6-80637754609f",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 568,
+      "height": 147,
+      "rawWidth": 568,
+      "rawHeight": 147,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

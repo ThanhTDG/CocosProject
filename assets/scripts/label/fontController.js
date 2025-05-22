@@ -12,9 +12,13 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        fonts: {
-            default: [],
-            type: [cc.Font]
+        font1: {
+            default: null,
+            type: cc.Font
+        },
+        font2: {
+            default: null,
+            type: cc.Font
         },
         currentFontIndex: {
             default: 0,
@@ -25,23 +29,32 @@ cc.Class({
     start() {
 
     },
-
-
+    onLoad() {
+        this._init();
+    },
+    _init() {
+        this.fonts = [this.font1, this.font2];
+        this._applyFont();
+        this.displayFontSizeChange();
+    },
     onClickChangeFont() {
-        if (this.fonts.length > 0) {
+        let hasFont = this.fonts.length > 0;
+        if (hasFont) {
             this.currentFontIndex = (this.currentFontIndex + 1) % this.fonts.length;
             this._applyFont();
-            console.log(`Font changed to index: ${this.currentFontIndex}`);
-        } else {
-            console.warn('Font array is empty!');
         }
+        this.displayFontSizeChange()
     },
     _applyFont() {
         let label = this._getLabel();
-        if (this.fonts.length > 0) {
+        let hasFont = this.fonts.length > 0;
+        if (hasFont) {
             label.font = this.fonts[this.currentFontIndex];
-        } else {
         }
+    },
+    displayFontSizeChange() {
+        let label = this._getLabel();
+        label.string = `Font: ${label.font.name}`;
     },
 
     _getLabel() {

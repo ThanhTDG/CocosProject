@@ -12,36 +12,30 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        audioSourceBGM: {
-            type: cc.AudioClip,
-            default: null
-        },
-        audioSourceClick: {
-            type: cc.AudioClip,
-            default: null
-        },
+        // foo: {
+        //     // ATTRIBUTES:
+        //     default: null,        // The default value will be used only when the component attaching
+        //                           // to a node for the first time
+        //     type: cc.SpriteFrame, // optional, default is typeof default
+        //     serializable: true,   // optional, default is true
+        // },
+        // bar: {
+        //     get () {
+        //         return this._bar;
+        //     },
+        //     set (value) {
+        //         this._bar = value;
+        //     }
+        // },
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad() {
+    // onLoad () {},
+
+    start () {
 
     },
-
-    start() {
-        this.playBGM();
-    },
-    clickPlaySound() {
-        this.playSoundClick();
-    },
-
-    playSoundClick() {
-        this.audioClick = cc.audioEngine.play(this.audioSourceClick, false, 1);
-        console.log("click sound", this);
-    },
-    playBGM() {
-        this.audioBGM = cc.audioEngine.play(this.audioSourceBGM, true, 1);
-    }
 
     // update (dt) {},
 });

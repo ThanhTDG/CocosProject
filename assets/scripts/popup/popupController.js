@@ -1,44 +1,74 @@
-// Learn cc.Class:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
+const { withClickEffect } = require("../sound/clickEffectWrapper");
 
 cc.Class({
-    extends: cc.Component,
+	extends: cc.Component,
 
-    properties: {
-        prefabSetting: {
-            default: null,
-            type: cc.Prefab,
-            tooltip: 'Prefab for popup setting',
-        },
-        nodeSetting: null,
-    },
-    onLoad() {
-        let nodeSetting = cc.instantiate(this.prefabSetting);
-        nodeSetting.parent = this.node;
-        this.popupSetting = nodeSetting.getComponent('popupSetting');
-    },
+	properties: {
+		prefabSetting: {
+			default: null,
+			type: cc.Prefab,
+			tooltip: "Prefab for popup setting",
+		},
+		prefabRank: {
+			default: null,
+			type: cc.Prefab,
+			tooltip: "Prefab for popup rank",
+		},
+	},
 
+	onLoad() {
+		this.activePopup = null;
 
-    onClickShowRank() {
-        this.popupRank.show();
-    },
-    onClickHideRank() {
-        this.popupRank.hide();
-    },
+		this.popupSetting = this.createPopup(this.prefabSetting, "popupSetting");
+		this.popupRank = this.createPopup(this.prefabRank, "popupRank");
 
-    onClickShowSetting() {
-        this.popupSetting.show();
-    },
-    onClickHideSetting() {
-        this.popupSetting.hide();
-    },
+		this.onClickShowRank = withClickEffect(this.onClickShowRank.bind(this));
+		this.onClickHideRank = withClickEffect(this.onClickHideRank.bind(this));
+		this.onClickShowSetting = withClickEffect(
+			this.onClickShowSetting.bind(this)
+		);
+		this.onClickHideSetting = withClickEffect(
+			this.onClickHideSetting.bind(this)
+		);
+	},
 
+	createPopup(prefab, componentName) {
+		const node = cc.instantiate(prefab);
+		node.parent = this.node;
+		return node.getComponent(componentName);
+	},
 
+	showPopup(popup) {
+		if (this.activePopup && this.activePopup !== popup) {
+			return;
+		}
+
+		if (!this.activePopup) {
+			this.activePopup = popup;
+			popup.show();
+		}
+	},
+
+	hidePopup(popup) {
+		if (this.activePopup === popup) {
+			popup.hide();
+			this.activePopup = null;
+		}
+	},
+
+	onClickShowRank() {
+		this.showPopup(this.popupRank);
+	},
+
+	onClickHideRank() {
+		this.hidePopup(this.popupRank);
+	},
+
+	onClickShowSetting() {
+		this.showPopup(this.popupSetting);
+	},
+
+	onClickHideSetting() {
+		this.hidePopup(this.popupSetting);
+	},
 });

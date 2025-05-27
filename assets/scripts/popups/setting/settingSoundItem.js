@@ -46,7 +46,6 @@ cc.Class({
 		this.updateUi();
 	},
 
-	// Private Methods
 	initialize() {
 		this.initializeController();
 		this.getStateFromController();

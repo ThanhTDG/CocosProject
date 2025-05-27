@@ -1,5 +1,6 @@
 const TypeSound = require("./typeSoundSystem");
-const SoundState = require("./soundState").SoundState;
+const { SoundState, SoundStateManager } = require("./soundState");
+
 cc.Class({
 	extends: cc.Component,
 
@@ -66,7 +67,7 @@ cc.Class({
 	},
 
 	setState(type, state) {
-		const oldState = this.getState(type);
+		const oldState = SoundStateManager.instance.getSoundState(type);
 		if (oldState.isEnable !== state.isEnable) {
 			this.handleEnableState(type, state.isEnable);
 		}
@@ -141,45 +142,21 @@ cc.Class({
 		this.updateVolumeForMusic(masterVolume, newVolume);
 	},
 
-	updateState(soundType, soundState) {
-		if (!this.mapSoundState.has(soundType)) {
-			throw new Error("Invalid sound type: " + soundType);
-		}
-		if (!(soundState instanceof SoundState)) {
-			throw new Error("soundState must be an instance of SoundState");
-		}
-		this.mapSoundState.set(soundType, soundState);
-	},
 
 	initializeSoundConfig() {
-		const defaultMap = this.createDefaultMap();
-		this.defaultMapState = defaultMap;
-		this.mapSoundState = new Map(defaultMap);
+		this.registerDefaultSoundState(TypeSound.MASTER, this.volumeMaster, this.isEnableMaster);
+		this.registerDefaultSoundState(TypeSound.MUSIC, this.volumeMusic, this.isEnableMusic);
+		this.registerDefaultSoundState(TypeSound.EFFECT, this.volumeEffect, this.isEnableEffect);
 		this.musicId = -1;
 	},
 
-	loadDefault(type) {
-		if (!this.defaultMapState.has(type)) {
-			throw new Error("Invalid sound type: " + type);
-		}
-		const defaultState = this.defaultMapState.get(type).clone();
-		this.setState(type, defaultState);
-		return defaultState;
+	registerDefaultSoundState(type, volume, isEnable) {
+		SoundStateManager.instance.addSoundDefaultState(
+			type,
+			new SoundState(volume, isEnable)
+		);
 	},
 
-	createDefaultMap() {
-		return new Map([
-			[
-				TypeSound.MASTER,
-				new SoundState(this.volumeMaster, this.isEnableMaster),
-			],
-			[TypeSound.MUSIC, new SoundState(this.volumeMusic, this.isEnableMusic)],
-			[
-				TypeSound.EFFECT,
-				new SoundState(this.volumeEffect, this.isEnableEffect),
-			],
-		]);
-	},
 
 	playBackgroundMusic() {
 		if (!this.musicSource) {

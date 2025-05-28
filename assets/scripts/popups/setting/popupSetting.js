@@ -1,4 +1,4 @@
-const Emitter = require("../../events/mEmiter");
+const Emitter = require("../../events/mEmitter");
 const { withClickEffect } = require("../../sound/effectWrapper");
 const { getChildComponent } = require("../utils/componentUtils");
 const PopupEventKeys = require('../../events/keys/popupEventKeys');
@@ -9,21 +9,16 @@ cc.Class({
 	properties: {},
 
 	onClickClosePopup() {
-		withClickEffect(() => this.closePopup());
+		withClickEffect(() => this.closePopup())();
 	},
-
 	onClickLoadDefault() {
-		withClickEffect(() => this.loadDefaultSound());
+		withClickEffect(() => this.loadDefaultSound())();
 	},
-
 	closePopup() {
-		Emitter.instance.emit(PopupEventKeys.CLOSE_RANKING_POPUP);
+		Emitter.instance.emit(PopupEventKeys.CLOSE_SETTING_POPUP);
 	},
 
 	loadDefaultSound() {
 		Emitter.instance.emit(SoundEventKeys.LOAD_SOUND_DEFAULT);
 	},
-
-
-
 });

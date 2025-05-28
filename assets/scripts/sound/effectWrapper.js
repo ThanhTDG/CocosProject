@@ -1,4 +1,4 @@
-const Emitter = require("../events/mEmiter");
+const Emitter = require("../events/mEmitter");
 const SoundEventKeys = require("../events/keys/soundEventKeys");
 
 export function withClickEffect(handler) {

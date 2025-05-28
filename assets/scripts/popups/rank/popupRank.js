@@ -1,5 +1,5 @@
 const PopupEventKeys = require("../../events/keys/popupEventKeys");
-const Emitter = require("../../events/mEmiter");
+const Emitter = require("../../events/mEmitter");
 const { withClickEffect } = require("../../sound/effectWrapper");
 
 
@@ -44,15 +44,13 @@ cc.Class({
 		this.initItemPool(this.maxItem);
 	},
 
-	onEnable() {
+	show() {
+		this._super();
 		this.populateList(dataList);
 	},
-
 	onClickClosePopup() {
-		withClickEffect(() => this.closePopup());
+		withClickEffect(() => this.closePopup())();
 	},
-
-
 	initItemPool(count) {
 		for (let i = 0; i < count; i++) {
 			const item = this.createItem();

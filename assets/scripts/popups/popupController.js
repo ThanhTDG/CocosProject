@@ -1,69 +1,14 @@
-const Emitter = require("../events/mEmiter");
+const Emitter = require("../events/mEmitter");
 const PopupEventKeys = require("../events/keys/popupEventKeys");
-const { PopupName } = require("./popupType");
+const { instantiatePrefab } = require("../utils/componentUtils");
 
-class PopupEventManager {
-	constructor() {
-		this.eventMap = new Map();
-	}
-
-	add(eventKey, handler) {
-		let hasEvent = this.eventMap.has(eventKey);
-		if (!hasEvent) {
-			this.eventMap.set(eventKey, handler);
-			Emitter.instance.regiterEvent(eventKey, handler);
-		}
-	}
-
-	remove(eventKey) {
-		const handler = this.eventMap.get(eventKey);
-		if (handler) {
-			Emitter.instance.removeEvent(eventKey, handler);
-			this.eventMap.delete(eventKey);
-		}
-	}
-
-	removeAll() {
-		for (const [eventKey, handler] of this.eventMap.entries()) {
-			Emitter.instance.removeEvent(eventKey, handler);
-		}
-		this.eventMap.clear();
-	}
-}
-
-class PopupManager {
-	constructor() {
-		this.popups = new Map();
-		this.activePopup = null;
-	}
-	addPopup(name, popupInstance) {
-		this.popups.set(name, popupInstance);
-	}
-	show(name) {
-		if (this.activePopup === name) {
-			return;
-		}
-		if (this.activePopup) this.hide(this.activePopup);
-		const popup = this.popups.get(name);
-		if (popup) {
-			popup.show();
-			this.activePopup = name;
-		}
-	}
-	hide(name) {
-		if (this.activePopup !== name) {
-			return;
-		}
-		const popup = this.popups.get(name);
-		if (popup) {
-			popup.hide();
-			this.activePopup = null;
-		}
-	}
+const PopupName = {
+	RANK: "popupRank",
+	SETTING: "popupSetting",
 }
 
 cc.Class({
-	extends: cc.Component,
+	extends: require('../events/eventController'),
 
 	properties: {
 		prefabSetting: {
@@ -77,58 +22,96 @@ cc.Class({
 			tooltip: "Prefab for popup rank",
 		},
 	},
-
 	onLoad() {
-		this.popupManager = new PopupManager();
-		this.eventManager = new PopupEventManager();
-
-		const popupConfigs = this.getPopupConfigs();
-		this.initializePopups(popupConfigs);
-		this.registerPopupEvents(popupConfigs);
+		this._super();
+		this.initialize();
 	},
-
-	onDestroy() {
-		this.eventManager.removeAll();
+	initialize() {
+		this.popupController = new PopupController(this.node);
+		this.initializeRank();
+		this.initializeSetting();
 	},
-
-	getPopupConfigs() {
-		return [
-			{
-				name: PopupName.SETTING,
-				prefabProp: "prefabSetting",
-				componentName: PopupName.SETTING,
-				openEvent: PopupEventKeys.OPEN_SETTING_POPUP,
-				closeEvent: PopupEventKeys.CLOSE_SETTING_POPUP,
-			},
-			{
-				name: PopupName.RANK,
-				prefabProp: "prefabRank",
-				componentName: PopupName.RANK,
-				openEvent: PopupEventKeys.OPEN_RANKING_POPUP,
-				closeEvent: PopupEventKeys.CLOSE_RANKING_POPUP,
-			},
-		];
+	initializeEvents({ name, prefab, closeKey, openKey, componentName }) {
+		let controller = this.popupController;
+		controller.createPopup(name, prefab);
+		this.registerEvent(openKey, controller.showPopup.bind(controller, name, componentName));
+		this.registerEvent(closeKey, controller.hidePopup.bind(controller, name, componentName));
 	},
-
-	initializePopups(configs) {
-		configs.forEach(config => {
-			const prefab = this[config.prefabProp];
-			const popup = this.createPopup(prefab, config.componentName);
-			this.popupManager.addPopup(config.name, popup);
+	initializeRank() {
+		this.initializeEvents({
+			name: PopupName.RANK,
+			componentName: PopupName.RANK,
+			prefab: this.prefabRank,
+			closeKey: PopupEventKeys.CLOSE_RANKING_POPUP,
+			openKey: PopupEventKeys.OPEN_RANKING_POPUP
 		});
 	},
-
-	registerPopupEvents(configs) {
-		configs.forEach(config => {
-			this.eventManager.add(config.openEvent, () => this.popupManager.show(config.name));
-			this.eventManager.add(config.closeEvent, () => this.popupManager.hide(config.name));
+	initializeSetting() {
+		this.initializeEvents({
+			name: PopupName.SETTING,
+			componentName: PopupName.SETTING,
+			prefab: this.prefabSetting,
+			closeKey: PopupEventKeys.CLOSE_SETTING_POPUP,
+			openKey: PopupEventKeys.OPEN_SETTING_POPUP
 		});
-	},
-
-	createPopup(prefab, componentName) {
-		const node = cc.instantiate(prefab);
-		node.parent = this.node;
-		return node.getComponent(componentName);
 	}
+
 });
 
+
+class PopupController {
+
+	constructor(rootNode) {
+		if (!rootNode) {
+			throw new Error("Root node is required for PopupController.");
+		}
+		this.activePopup = null;
+		this.rootNode = rootNode;
+		this.popupMap = new Map();
+	}
+
+	createPopup(popupName, popupPrefab) {
+		if (this.popupMap.has(popupName)) {
+			throw new Error(`Popup ${popupName} is already created.`);
+		}
+		const node = instantiatePrefab(popupPrefab, this.rootNode, popupName);
+		this.popupMap.set(popupName, node);
+		return node;
+	}
+
+	registerEvent(key, registerEvent, func) {
+		if (!registerEvent || typeof registerEvent !== 'function') {
+			throw new Error("registerEvent must be a function.");
+		}
+		registerEvent(key, func);
+	}
+
+	getPopup(popupName) {
+		if (!this.popupMap.has(popupName)) {
+			throw new Error(`Popup ${popupName} is not created.`);
+		}
+		return this.popupMap.get(popupName);
+	}
+
+	showPopup(popupName, componentName) {
+		const popupNode = this.getPopup(popupName);
+		if (!popupNode) {
+			throw new Error(`Popup ${popupName} is not created.`);
+		}
+		if (this.activePopup === null) {
+			this.activePopup = popupName;
+			popupNode.getComponent(componentName).show();
+		}
+	}
+	hidePopup(popupName, componentName) {
+		const popupNode = this.getPopup(popupName);
+		if (!popupNode) {
+			throw new Error(`Popup ${popupName} is not created.`);
+		}
+		if (this.activePopup !== popupName) {
+			return;
+		}
+		this.activePopup = null;
+		popupNode.getComponent(componentName).hide();
+	}
+}

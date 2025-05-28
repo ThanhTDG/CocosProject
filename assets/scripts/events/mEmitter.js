@@ -11,13 +11,13 @@ class mEmitter {
         }
         return mEmitter._instance;
     }
-    emit(...agrs) {
-        this.emitter.emit(...agrs);
+    emit(...args) {
+        this.emitter.emit(...args);
     }
-    regiterEvent(event, listener) {
+    registerEvent(event, listener) {
         this.emitter.on(event, listener);
     }
-    regiterOnceEvent(event, listener) {
+    registerOnceEvent(event, listener) {
         this.emitter.once(event, listener);
     }
     removeEvent(event, listener) {

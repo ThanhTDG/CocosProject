@@ -1,5 +1,5 @@
 const { withClickEffect } = require("../sound/effectWrapper");
-const Emitter = require("../events/mEmiter");
+const Emitter = require("../events/mEmitter");
 const PopupEventKeys = require("../events/keys/popupEventKeys");
 cc.Class({
     extends: cc.Component,
@@ -8,17 +8,16 @@ cc.Class({
 
     },
     onClickOpenRank() {
-        withClickEffect(() => this.openRankingPopup());
+        withClickEffect(() => this.openRankingPopup())();
     },
     onClickOpenSetting() {
-        withClickEffect(() => this.openSettingPopup());
+        withClickEffect(() => this.openSettingPopup())();
     },
     openRankingPopup() {
         Emitter.instance.emit(PopupEventKeys.OPEN_RANKING_POPUP);
     },
     openSettingPopup() {
-        cc.director.loadScene(PopupEventKeys.OPEN_SETTING_POPUP);
+        Emitter.instance.emit(PopupEventKeys.OPEN_SETTING_POPUP);
     }
-
 
 });

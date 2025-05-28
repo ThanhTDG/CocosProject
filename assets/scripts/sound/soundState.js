@@ -77,6 +77,15 @@ export class SoundStateManager {
 			this.mapState.set(key, value.clone());
 		}
 	}
+
+	setDefaultState(soundType) {
+		if (!this.mapDefaultState.has(soundType)) {
+			throw new Error(`Sound type ${soundType} is already defined in default state.`);
+		}
+		let stateDefault = this.mapDefaultState.get(soundType).clone();
+		this.mapState.set(soundType, stateDefault);
+	}
+
 	getMapState() {
 		if (this.mapState.size === 0) {
 			this.setMapByDefaultState();
@@ -84,7 +93,7 @@ export class SoundStateManager {
 		return this.mapState;
 	}
 
-	valiteHasSoundType(soundType) {
+	validateHasSoundType(soundType) {
 		let hasType = this.mapState.has(soundType);
 		if (!hasType) {
 			throw new Error(`Sound type ${soundType} is not defined in state.`);
@@ -93,6 +102,9 @@ export class SoundStateManager {
 	}
 
 	getSoundState(soundType) {
+		if (!this.mapState.has(soundType)) {
+			this.setDefaultState(soundType);
+		}
 		return this.mapState.get(soundType).clone();
 	}
 	isEqual(soundType, soundState) {
@@ -102,17 +114,15 @@ export class SoundStateManager {
 	}
 
 	updateState(soundType, soundState) {
-		if (!this.isEqual(soundType, soundState)) {
-			this.mapState.set(soundType, soundState);
-		}
+		this.mapState.set(soundType, soundState);
 	}
 
 	setSoundState(soundType, soundState) {
-		this.valiteHasSoundType(soundType);
+		this.validateHasSoundType(soundType);
 		this.mapState.set(soundType, soundState);
 	}
 	resetSoundState(soundType) {
-		this.valiteHasSoundType(soundType);
+		this.validateHasSoundType(soundType);
 		this.mapState.set(soundType, this.mapDefaultState.get(soundType).clone());
 	}
 }

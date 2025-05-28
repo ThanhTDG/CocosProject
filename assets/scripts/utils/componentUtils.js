@@ -11,3 +11,18 @@ export function getChildComponent(parentNode, childName, componentType) {
 	}
 	return component;
 }
+
+export function instantiatePrefab(prefab, parentNode, name) {
+	if (!prefab) {
+		throw new Error("Prefab is required for instantiation.");
+	}
+	const instance = cc.instantiate(prefab);
+	instance.name = name || prefab.name;
+	if (!instance) {
+		throw new Error("Failed to instantiate prefab.");
+	}
+	if (parentNode) {
+		instance.parent = parentNode;
+	}
+	return instance;
+}

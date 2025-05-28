@@ -1,3 +1,8 @@
+const PopupEventKeys = require("../../events/keys/popupEventKeys");
+const Emitter = require("../../events/mEmitter");
+const { withClickEffect } = require("../../sound/effectWrapper");
+
+
 const dataList = [
 	{ rank: 1, name: "Player 1", score: 1000 },
 	{ rank: 2, name: "Player 2", score: 950 },
@@ -39,10 +44,13 @@ cc.Class({
 		this.initItemPool(this.maxItem);
 	},
 
-	onEnable() {
+	show() {
+		this._super();
 		this.populateList(dataList);
 	},
-
+	onClickClosePopup() {
+		withClickEffect(() => this.closePopup())();
+	},
 	initItemPool(count) {
 		for (let i = 0; i < count; i++) {
 			const item = this.createItem();
@@ -75,4 +83,9 @@ cc.Class({
 		}
 		item.active = true;
 	},
+	closePopup() {
+		Emitter.instance.emit(PopupEventKeys.CLOSE_RANKING_POPUP);
+	},
+
+
 });

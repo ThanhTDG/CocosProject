@@ -67,7 +67,7 @@ cc.Class({
         );
     },
     updateLoadingRichText() {
-        const text = `${this.loadingText} ${this.percent || 0}%;`
+        const text = `${this.loadingText} ${this.percent || 0}%`
         if (this.richText) {
             this.richText.string = getRainbowRichText(
                 text,

@@ -1,3 +1,5 @@
+const { getRainbowRichText, RAINBOW_SIZES } = require("../utils/richTextUtils");
+
 cc.Class({
     extends: cc.Component,
 
@@ -12,40 +14,38 @@ cc.Class({
             type: cc.RichText,
             tooltip: "Label to display loading text",
         },
+        textLoading: {
+            default: "Loading...",
+            tooltip: "Text to display during loading",
+        },
         minTimeLoading: {
             default: 1000,
-            tooltip: "Time to wait before starting the loading screen",
+            tooltip: "Minimum time to show loading screen in milliseconds",
         }
     },
-    data() {
-        return {
-            colorIndex: 0,
-            loadingColors: [
-                "#ff0000", // đỏ
-                "#ffa500", // cam
-                "#ffff00", // vàng
-                "#00ff00", // xanh lá
-                "#00ffff", // xanh ngọc
-                "#0000ff", // xanh dương
-                "#800080", // tím
-            ],
-            loadingText: "Loading...",
-        };
+    statics: {
+        targetScene: "lobby",
+        loadWithLoading(sceneName = "lobby") {
+            this.targetScene = sceneName;
+            cc.director.loadScene("loading");
+        }
     },
+    start() {
+        this.onLoadingScreen();
+    },
+
     onLoadingScreen() {
+        const sceneName = this.constructor.targetScene;
         const minTimeLoadingMs = this.minTimeLoading;
         const startTime = Date.now();
-
         this.colorIndex = 0;
-        this.loadingColors = [
-            "#ff0000", "#ffa500", "#ffff00", "#00ff00", "#00ffff", "#0000ff", "#800080", "#ff69b4", "#ffffff"
-        ];
-        this.loadingText = "Loading...";
+        this.loadingText = this.textLoading;
+        this.sizes = RAINBOW_SIZES;
 
-        this.schedule(this.updateLoadingRichText, 0.1); // cập nhật mỗi 0.1s
+        this.schedule(this.updateLoadingRichText, 0.1);
 
         cc.director.preloadScene(
-            "lobby",
+            sceneName,
             (completedCount, totalCount, item) => {
                 if (this.loadingBar) {
                     this.loadingBar.progress = completedCount / totalCount;
@@ -58,7 +58,7 @@ cc.Class({
                     const wait = Math.max(0, minTimeLoadingMs - elapsed);
                     setTimeout(() => {
                         this.unschedule(this.updateLoadingRichText);
-                        cc.director.loadScene("lobby");
+                        cc.director.loadScene(sceneName);
                     }, wait);
                 } else {
                     cc.error("Preload scene error:", error);
@@ -67,49 +67,16 @@ cc.Class({
         );
     },
     updateLoadingRichText() {
-        const sizes = [50, 30, 30, 30, 30, 30, 30, 30, 30, 30];
-        let rich = "";
-        for (let i = 0; i < this.loadingText.length; i++) {
-            const size = sizes[(i + this.colorIndex) % this.loadingText.length];
-            const color = this.loadingColors[(i + this.colorIndex) % this.loadingColors.length];
-            rich += `<size=${size}><color=${color}>${this.loadingText[i]}</color></size>`;
-        }
+        const text = `${this.loadingText} ${this.percent || 0}%;`
         if (this.richText) {
-            this.richText.string = `${rich} <size=40><color=#ffff00>${this.percent || 0}%</color></size>`;
+            this.richText.string = getRainbowRichText(
+                text,
+                this.colorIndex,
+                this.sizes,
+            );
         }
-        this.colorIndex = (this.colorIndex + 1) % this.loadingText.length;
+        this.colorIndex = (this.colorIndex + 1) % this.sizes.length;
     },
 
 
-    start() {
-        this.onLoadingScreen();
-    },
-
-    // onLoadingScreen() {
-    //     const minTimeLoadingMs = this.minTimeLoading;
-    //     const startTime = Date.now();
-
-    //     cc.director.preloadScene(
-    //         "lobby",
-    //         (completedCount, totalCount, item) => {
-    //             if (this.loadingBar) {
-    //                 this.loadingBar.progress = completedCount / totalCount;
-    //             }
-    //             if (this.richText) {
-    //                 this.richText.string = `Loading... ${Math.min(99, Math.floor((completedCount / totalCount) * 100))}%`;
-    //             }
-    //         },
-    //         (error, asset) => {
-    //             if (!error) {
-    //                 const elapsed = Date.now() - startTime;
-    //                 const wait = Math.max(0, minTimeLoadingMs - elapsed);
-    //                 setTimeout(() => {
-    //                     cc.director.loadScene("lobby");
-    //                 }, wait);
-    //             } else {
-    //                 cc.error("Preload scene error:", error);
-    //             }
-    //         }
-    //     );
-    // },
 })

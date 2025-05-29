@@ -25,7 +25,7 @@ export class EventManager {
         Emitter.instance.removeEvent(eventKey, eventHandler);
         this.mapEvent.delete(eventKey);
     }
-    
+
     removeAllEvents() {
         for (const [eventKey, eventHandler] of this.mapEvent.entries()) {
             Emitter.instance.removeEvent(eventKey, eventHandler);

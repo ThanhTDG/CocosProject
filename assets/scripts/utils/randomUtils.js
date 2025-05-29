@@ -15,3 +15,7 @@ export const ccColor = () => {
 	);
 	return randomColor;
 };
+export const randomId = (length = 10) => {
+	let result = randomColor().replace("#", "");
+	return `${result}_${Date.now()}`.slice(0, length);
+}

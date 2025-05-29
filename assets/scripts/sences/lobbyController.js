@@ -13,6 +13,13 @@ cc.Class({
     onClickOpenSetting() {
         withClickEffect(() => this.openSettingPopup())();
     },
+    onClickPlayGame() {
+        withClickEffect(() => this.openRomScene())();
+    },
+    openRomScene() {
+        let loadingController = require("scenes/loadingController");
+        loadingController.loadWithLoading("scenes/room");
+    },
     openRankingPopup() {
         Emitter.instance.emit(PopupEventKeys.OPEN_RANKING_POPUP);
     },

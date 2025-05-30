@@ -1,9 +1,8 @@
-const { getChildComponent } = require("../../utils/componentUtils");
-const TypeSoundSystem = require("./typeSoundSystem");
-const { ControllerType, controllerUtils } = require("../utils/controllerUtils");
-const Emitter = require("../../events/mEmitter");
-const { withClickEffect } = require("../../sound/effectWrapper");
-const SoundEventKeys = require("../../events/keys/soundEventKeys");
+const { getChildComponent } = require("../../../utils/componentUtils");
+const TypeSoundSystem = require("../../../sound/typeSoundSystem");
+const Emitter = require("../../../events/mEmitter");
+const { withClickEffect } = require("../../../sound/effectWrapper");
+const SoundEventKeys = require("../../../events/keys/soundEventKeys");
 
 cc.Class({
 	extends: require("../../events/eventController"),

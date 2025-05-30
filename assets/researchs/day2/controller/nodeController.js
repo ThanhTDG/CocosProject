@@ -1,5 +1,5 @@
 const randomUtils = require("../utils/randomUtils");
-const positionUtils = require("../utils/positionUtils");
+const { calculateCircularPosition } = require("../utils/vectorUtils");
 cc.Class({
 	extends: cc.Component,
 
@@ -56,7 +56,7 @@ cc.Class({
 	_moveInCircle(dt) {
 		this.angle += this.speed * dt;
 		let radius = 100;
-		const { x, y } = positionUtils.calculateCircularPosition(
+		const { x, y } = calculateCircularPosition(
 			this.originalPosition,
 			radius,
 			this.angle

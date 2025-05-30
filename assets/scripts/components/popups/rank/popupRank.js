@@ -1,6 +1,6 @@
-const PopupEventKeys = require("../../events/keys/popupEventKeys");
-const Emitter = require("../../events/mEmitter");
-const { withClickEffect } = require("../../sound/effectWrapper");
+const PopupEventKeys = require("../../../events/keys/popupEventKeys");
+const Emitter = require("../../../events/mEmitter");
+const { withClickEffect } = require("../../../sound/effectWrapper");
 
 
 const dataList = [

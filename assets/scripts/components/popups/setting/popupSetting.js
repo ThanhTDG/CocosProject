@@ -1,8 +1,7 @@
-const Emitter = require("../../events/mEmitter");
-const { withClickEffect } = require("../../sound/effectWrapper");
-const { getChildComponent } = require("../utils/componentUtils");
-const PopupEventKeys = require('../../events/keys/popupEventKeys');
-const SoundEventKeys = require('../../events/keys/soundEventKeys');
+const Emitter = require("../../../events/mEmitter");
+const { withClickEffect } = require("../../../sound/effectWrapper");
+const PopupEventKeys = require('../../../events/keys/popupEventKeys');
+const SoundEventKeys = require('../../../events/keys/soundEventKeys');
 
 cc.Class({
 	extends: require("popupItem"),

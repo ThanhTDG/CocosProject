@@ -23,13 +23,9 @@
     ],
     "_active": true,
     "_level": 1,
-    "_components": [
-      {
-        "__id__": 5
-      }
-    ],
+    "_components": [],
     "_prefab": {
-      "__id__": 6
+      "__id__": 5
     },
     "_opacity": 255,
     "_color": {
@@ -175,19 +171,6 @@
     },
     "fileId": "2cN3znMYpB86oq4OjoCW4N",
     "sync": false
-  },
-  {
-    "__type__": "c41551dKsNMJKVC885mBSpR",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "characterType": 2,
-    "speed": 100,
-    "enemyType": 0,
-    "_id": ""
   },
   {
     "__type__": "cc.PrefabInfo",

@@ -1,4 +1,3 @@
-const Emitter = require("../events/mEmitter");
 const PopupEventKeys = require("../events/keys/popupEventKeys");
 const { instantiatePrefab } = require("../utils/componentUtils");
 

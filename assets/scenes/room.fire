@@ -18,6 +18,9 @@
       },
       {
         "__id__": 18
+      },
+      {
+        "__id__": 20
       }
     ],
     "_active": false,
@@ -509,7 +512,7 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": -780,
+      "x": -1530.078,
       "y": -360,
       "z": 0
     },
@@ -938,6 +941,82 @@
       "__id__": 18
     },
     "_enabled": true,
+    "_id": "eaCUw/7d1CdpHysC35a15e"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "enemyController",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_active": true,
+    "_level": 1,
+    "_components": [
+      {
+        "__id__": 21
+      }
+    ],
+    "_prefab": null,
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_position": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_scale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_is3DNode": false,
+    "groupIndex": 0,
+    "_id": "301Ocu+uBMmpI5ov/Cc0ja"
+  },
+  {
+    "__type__": "c6b71pMXm5Hnrb3BzOm+Z4Z",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 20
+    },
+    "_enabled": true,
+    "prefab": {
+      "__uuid__": "5ba3d4e0-4ce4-465c-88d1-d07bea273f83"
+    },
+    "enemySprites": [
+      {
+        "__id__": 22
+      }
+    ],
     "spawnPoints": [
       {
         "__id__": 11
@@ -952,10 +1031,18 @@
         "__id__": 14
       }
     ],
-    "normalCount": 40,
-    "normalEnemyPrefab": {
-      "__uuid__": "5ba3d4e0-4ce4-465c-88d1-d07bea273f83"
+    "minTimeSpawn": 4000,
+    "maxTimeSpawn": 5000,
+    "layerNode": {
+      "__id__": 9
     },
-    "_id": "eaCUw/7d1CdpHysC35a15e"
+    "_id": "a6qQKnNYNHM7CmVtxZlHRo"
+  },
+  {
+    "__type__": "EnemySprite",
+    "spriteFrame": {
+      "__uuid__": "cb54225c-f3e5-4365-885a-faa198b23918"
+    },
+    "enemyType": 0
   }
 ]

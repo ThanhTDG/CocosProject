@@ -68,7 +68,6 @@ cc.Class({
 	},
 	onArrive() {
 		this.isMoving = false;
-		cc.log("Arrived at target position");
 	},
 	moveByDirection(direction) {
 		validateVector(direction);

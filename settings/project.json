@@ -3,6 +3,23 @@
   "collision-matrix": [
     [
       true
+    ],
+    [
+      false,
+      false,
+      true
+    ],
+    [
+      false,
+      true,
+      false,
+      true
+    ],
+    [
+      false,
+      false,
+      true,
+      false
     ]
   ],
   "design-resolution-height": 720,
@@ -21,7 +38,10 @@
   "fit-height": true,
   "fit-width": false,
   "group-list": [
-    "default"
+    "default",
+    "boundary",
+    "enemy",
+    "obstacle"
   ],
   "last-module-event-record-time": 1747880226803,
   "simulator-orientation": false,
@@ -30,6 +50,5 @@
     "width": 960
   },
   "use-customize-simulator": true,
-  "use-project-simulator-setting": false,
-  "start-scene": "current"
+  "use-project-simulator-setting": false
 }

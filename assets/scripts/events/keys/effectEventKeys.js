@@ -1,0 +1,2 @@
+export const SPAWN_EFFECT = "SPAWN_EFFECT";
+export const CLEAR_EFFECTS = "CLEAR_EFFECTS";

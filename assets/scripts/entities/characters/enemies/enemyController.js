@@ -1,11 +1,11 @@
 const { EnemyType } = require("./enemyType");
-const { randomId } = require("../../../utils/randomUtils");
-const {
-	validateVector,
-	getPositionNodeSpace,
-	getPositionWorldSpace,
-} = require("../../../utils/vectorUtils");
 const { EnemySpawnManager } = require("./enemySpawnManager");
+const EnemyEventKeys = require("../../../events/keys/enemyEventKeys");
+const GameEventKeys = require("../../../events/keys/gameEventKeys");
+const EffectEventKeys = require("../../../events/keys/effectEventKeys");
+const Emitter = require("../../../events/mEmitter");
+const { EffectType } = require("../../../components/effect/effectType");
+const { EffectItem } = require("../../../components/effect/effectItem");
 
 const EnemySprite = cc.Class({
 	name: "EnemySprite",
@@ -58,8 +58,8 @@ cc.Class({
 	initialize() {
 		this.setUpSpawnManager();
 		this.registerEvents();
-		this.start();
 	},
+
 	setUpSpawnManager() {
 		this.listSpawned = [];
 		this.spawnManager = new EnemySpawnManager({
@@ -70,17 +70,66 @@ cc.Class({
 		});
 	},
 
-	start(scenario) {
-		let scenarioTest = require("../../../dataTest/sernario").scenarioTest;
-		this.spawnManager.spawnByScenario(scenarioTest);
-		// this.spawnManager(scenario);
+	startSpawn(scenario) {
+		this.spawnManager.spawnByScenario(scenario);
 	},
 	registerEvents() {
 		this.registerSpawnEvents();
+		this.registerEnemyOutScreen();
+		this.registerHitObstacleEvents();
 	},
+	registerHitObstacleEvents() {
+		this.registerEvent(
+			EnemyEventKeys.ENEMY_HIT_OBSTACLE,
+			this.handleHitObstacle.bind(this)
+		);
+	},
+
 	registerSpawnEvents() {
-		this.registerEvent("spawnEnemy", (scenario) => {
-			this.start(scenario);
+		this.registerEvent(
+			GameEventKeys.START_ENEMY_SPAWN,
+			this.startSpawn.bind(this)
+		);
+	},
+	handleStartEnemySpawn(scenario) {
+		this.startSpawn(scenario);
+	},
+	registerEnemyOutScreen() {
+		this.registerEvent(
+			EnemyEventKeys.ENEMY_OUTSIDE,
+			this.handleOutOfBounds.bind(this)
+		);
+	},
+	handleOutOfBounds(id) {
+		const { enemy, index } = this.getEnemyById(id);
+		enemy.handleOutOfBounds();
+		this.listSpawned.splice(index, 1);
+	},
+	findIndexById(id) {
+		return this.listSpawned.findIndex((e) => e.id === id);
+	},
+	getEnemyById(id, mustExist = true) {
+		const index = this.findIndexById(id);
+		const isFound = index !== -1;
+		if (isFound) {
+			return { enemy: this.listSpawned[index], index: index };
+		}
+		if (mustExist) {
+			cc.error(`Enemy with id ${id} not found.`);
+		}
+		return { enemy: null, index: -1 };
+	},
+	handleHitObstacle(id) {
+		const { enemy } = this.getEnemyById(id);
+		enemy.handleHitObstacle();
+		const worldPosition = this.node.convertToWorldSpaceAR(enemy.node.position);
+		this.emitEnemyHitObstacle(worldPosition);
+	},
+	emitEnemyHitObstacle(worldPosition) {
+		const effectItem = new EffectItem({
+			effectType: EffectType.EXPLOSION,
+			worldPosition,
 		});
+		Emitter.instance.emit(EffectEventKeys.SPAWN_EFFECT, effectItem);
 	},
 });

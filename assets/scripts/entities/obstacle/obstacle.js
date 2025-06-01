@@ -1,7 +1,5 @@
 cc.Class({
-    extends: cc.Component,
+	extends: cc.Component,
 
-    properties: {
-      
-    },
+	properties: {},
 });

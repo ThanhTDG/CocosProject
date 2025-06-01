@@ -22,6 +22,15 @@ export function getMoveStepToTarget(current, target, speed, dt) {
 	const direction = target.sub(current).normalize();
 	return direction.mul(speed * dt);
 }
+export function getPositionNodeSpace(node, worldPosition) {
+	validateVector(worldPosition);
+	return node.convertToNodeSpaceAR(worldPosition);
+}
+
+export function getPositionWorldSpace(node, localPosition) {
+	validateVector(localPosition);
+	return node.convertToWorldSpaceAR(localPosition);
+}
 
 export function isArrived(current, target, moveStep) {
 	return current.sub(target).mag() < moveStep.mag();

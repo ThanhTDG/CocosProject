@@ -8,7 +8,8 @@ const { EffectType } = require("../../../components/effect/effectType");
 const { EffectItem } = require("../../../components/effect/effectItem");
 const { EntityCollision } = require("../../entityCollision");
 const { EntityGroup } = require("../../entityType");
-
+const BulletEventKeys = require("../../../events/keys/bulletEventKeys");
+const { BulletStats } = require("../../bullet/bulletStats");
 const EnemySprite = cc.Class({
 	name: "EnemySprite",
 	properties: {
@@ -77,12 +78,19 @@ cc.Class({
 	registerEvents() {
 		this.registerSpawnEvents();
 		this.registerEnemyHitEvents();
+		this.registerGetBulletHit();
 	},
 
 	registerEnemyHitEvents() {
 		this.registerEvent(
 			EnemyEventKeys.ENEMY_HIT_ENTITY,
 			this.handleHitEntity.bind(this)
+		);
+	},
+	registerGetBulletHit() {
+		this.registerEvent(
+			BulletEventKeys.BULLET_HIT_ENEMY,
+			this.handleEnemyTakeDame.bind(this)
 		);
 	},
 
@@ -111,10 +119,20 @@ cc.Class({
 				break;
 		}
 	},
+	handleEnemyTakeDame(bulletStats) {
+		const isValid = bulletStats instanceof BulletStats;
+		if (!isValid) {
+			cc.error("Invalid bullet stats provided.");
+			return;
+		}
+		const { targetId } = bulletStats;
+		const { enemy } = this.getEnemyById(targetId);
+		enemy.takeDamage(bulletStats.damage);
+	},
 
 	handleHitBoundary(id) {
 		const { enemy, index } = this.getEnemyById(id);
-		enemy.handleOutOfBounds();
+		enemy.moveOutOfBounds();
 		this.listSpawned.splice(index, 1);
 	},
 	findIndexById(id) {
@@ -133,7 +151,7 @@ cc.Class({
 	},
 	handleHitObstacle(id) {
 		const { enemy } = this.getEnemyById(id);
-		enemy.handleHitObstacle();
+		enemy.takeDamage(50);
 		const worldPosition = this.node.convertToWorldSpaceAR(enemy.node.position);
 		this.emitEffectExplosion(worldPosition);
 	},

@@ -177,7 +177,7 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "9ce400df-cec0-4a13-a36e-7ea8a5511d0e"
+      "__uuid__": "69dfc74f-6015-4c2d-8b4f-7170ebd140fa"
     },
     "fileId": "60EZ6pyTpNKIW/qe8F5EBV",
     "sync": false
@@ -193,7 +193,7 @@
     "entityType": 3,
     "bulletType": 0,
     "speed": 500,
-    "damage": 10,
+    "damage": 200,
     "BulletType": 0,
     "_id": ""
   },
@@ -249,7 +249,7 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "9ce400df-cec0-4a13-a36e-7ea8a5511d0e"
+      "__uuid__": "69dfc74f-6015-4c2d-8b4f-7170ebd140fa"
     },
     "fileId": "0bNpdDyP5Pp753UI69TTIM",
     "sync": false

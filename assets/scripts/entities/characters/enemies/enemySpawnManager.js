@@ -34,10 +34,14 @@ export class EnemySpawnManager {
 
 	setup(node, type, level = 1) {
 		const script = this.setupScript(node, type);
+		this.setupStateMachine(script);
 		this.setupSprite(script, type);
 		this.setupStats(script, level);
 		this.setupId(script);
 		return script;
+	}
+	setupStateMachine(script) {
+		script.initStateMachine();
 	}
 
 	setupSprite(script, type) {

@@ -177,7 +177,7 @@
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
-      "z": 420.8883462392372
+      "z": 366.32874580081756
     },
     "_scale": {
       "__type__": "cc.Vec3",
@@ -559,8 +559,8 @@
     "_active": true,
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 589.129,
-      "y": 250.337,
+      "x": -61.315,
+      "y": 180.781,
       "z": 0
     },
     "_eulerAngles": {
@@ -1036,7 +1036,7 @@
     "_enabled": true,
     "bulletPrefabs": [
       {
-        "__uuid__": "9ce400df-cec0-4a13-a36e-7ea8a5511d0e"
+        "__uuid__": "69dfc74f-6015-4c2d-8b4f-7170ebd140fa"
       }
     ],
     "_id": "7atomNUJJD3ada+hzN1aFF"

@@ -133,7 +133,7 @@ cc.Class({
 	handleHitEnemy(targetId, currentId) {
 		const { bullet, index } = this.getById(currentId)
 		const stats = bullet.getStats();
-		stats.setTargetId = targetId;
+		stats.setTargetId(targetId);
 		this.emitHitEnemy(stats);
 		const worldPosition = this.node.convertToWorldSpaceAR(bullet.node.position);
 		this.emitEffectExplosion(worldPosition)

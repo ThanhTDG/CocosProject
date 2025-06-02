@@ -5,7 +5,7 @@ export class BulletStats {
         this.damage = damage;
         this.speed = speed;
         this.bulletType = bulletType
-        this.targetId = this.targetId
+        this.targetId = targetId
     }
     setTargetId(targetId) {
         this.targetId = targetId;

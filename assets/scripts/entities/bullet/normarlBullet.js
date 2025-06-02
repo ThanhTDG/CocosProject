@@ -17,7 +17,7 @@ cc.Class({
             tooltip: "Speed of the bullet in pixels per second",
         },
         damage: {
-            default: 10,
+            default: 200,
             override: true,
             tooltip: "Damage dealt by the bullet",
         },

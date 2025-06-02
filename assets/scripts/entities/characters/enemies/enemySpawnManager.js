@@ -51,7 +51,7 @@ export class EnemySpawnManager {
 	}
 
 	setupStats(script, level = 1) {
-		const stats = new EnemyStats(script.enemyType, this.level);
+		const stats = new EnemyStats(script.enemyType, level);
 		script.setStats(stats);
 	}
 

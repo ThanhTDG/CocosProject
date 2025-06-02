@@ -1,1 +1,4 @@
-export const BULLET_HIT = "BULLET_HIT";
+export const BULLET_HIT_ENTITY = "BULLET_HIT_ENTITY";
+export const BULLET_HIT_ENEMY = "BULLET_HIT_ENEMY";
+export const SPAWN_BULLET = "SPAWN_BULLET";
+export const SPAWN_LIST_BULLET = "SPAWN_LIST_BULLET";

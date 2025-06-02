@@ -7,18 +7,29 @@
     [
       false,
       false,
+      true,
+      null,
       true
     ],
     [
       false,
       true,
       false,
+      true,
       true
     ],
     [
       false,
       false,
       true,
+      false,
+      false
+    ],
+    [
+      false,
+      true,
+      true,
+      false,
       false
     ]
   ],
@@ -41,7 +52,8 @@
     "default",
     "boundary",
     "enemy",
-    "obstacle"
+    "obstacle",
+    "bullet"
   ],
   "last-module-event-record-time": 1747880226803,
   "simulator-orientation": false,

@@ -6,6 +6,8 @@ const EffectEventKeys = require("../../../events/keys/effectEventKeys");
 const Emitter = require("../../../events/mEmitter");
 const { EffectType } = require("../../../components/effect/effectType");
 const { EffectItem } = require("../../../components/effect/effectItem");
+const { EntityCollision } = require("../../entityCollision");
+const { EntityGroup } = require("../../entityType");
 
 const EnemySprite = cc.Class({
 	name: "EnemySprite",
@@ -57,7 +59,6 @@ cc.Class({
 
 	initialize() {
 		this.setUpSpawnManager();
-		this.registerEvents();
 	},
 
 	setUpSpawnManager() {
@@ -75,13 +76,13 @@ cc.Class({
 	},
 	registerEvents() {
 		this.registerSpawnEvents();
-		this.registerEnemyOutScreen();
-		this.registerHitObstacleEvents();
+		this.registerEnemyHitEvents();
 	},
-	registerHitObstacleEvents() {
+
+	registerEnemyHitEvents() {
 		this.registerEvent(
-			EnemyEventKeys.ENEMY_HIT_OBSTACLE,
-			this.handleHitObstacle.bind(this)
+			EnemyEventKeys.ENEMY_HIT_ENTITY,
+			this.handleHitEntity.bind(this)
 		);
 	},
 
@@ -91,16 +92,27 @@ cc.Class({
 			this.startSpawn.bind(this)
 		);
 	},
-	handleStartEnemySpawn(scenario) {
-		this.startSpawn(scenario);
+	handleHitEntity(entityCollision) {
+		const isExited = entityCollision instanceof EntityCollision;
+		if (!isExited) {
+			cc.error("Invalid entity collision data provided.");
+			return;
+		}
+		const { otherType, currentId } = entityCollision;
+		switch (otherType) {
+			case EntityGroup.Obstacle:
+				this.handleHitObstacle(currentId);
+				break;
+			case EntityGroup.Boundary:
+				this.handleHitBoundary(currentId);
+				break;
+			default:
+				cc.warn(`why type is here ${otherType}`);
+				break;
+		}
 	},
-	registerEnemyOutScreen() {
-		this.registerEvent(
-			EnemyEventKeys.ENEMY_OUTSIDE,
-			this.handleOutOfBounds.bind(this)
-		);
-	},
-	handleOutOfBounds(id) {
+
+	handleHitBoundary(id) {
 		const { enemy, index } = this.getEnemyById(id);
 		enemy.handleOutOfBounds();
 		this.listSpawned.splice(index, 1);
@@ -123,9 +135,9 @@ cc.Class({
 		const { enemy } = this.getEnemyById(id);
 		enemy.handleHitObstacle();
 		const worldPosition = this.node.convertToWorldSpaceAR(enemy.node.position);
-		this.emitEnemyHitObstacle(worldPosition);
+		this.emitEffectExplosion(worldPosition);
 	},
-	emitEnemyHitObstacle(worldPosition) {
+	emitEffectExplosion(worldPosition) {
 		const effectItem = new EffectItem({
 			effectType: EffectType.EXPLOSION,
 			worldPosition,

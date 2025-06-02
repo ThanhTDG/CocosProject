@@ -6,8 +6,9 @@ export const EntityType = cc.Enum({
 });
 
 export const EntityGroup = {
-	Character: "character",
+	Player: "Player",
 	Obstacle: "obstacle",
 	Boundary: "boundary",
 	Bullet: "bullet",
+	Enemy: "enemy",
 };

@@ -4,6 +4,7 @@ const { EntityGroup } = require("../../entityType");
 const EnemyEventKeys = require("../../../events/keys/enemyEventKeys");
 const CharacterBase = require("../characterBase");
 const Emitter = require("../../../events/mEmitter");
+const { EntityCollision } = require("../../entityCollision");
 cc.Class({
 	extends: CharacterBase,
 	properties: {
@@ -45,27 +46,25 @@ cc.Class({
 	moveLeft() {
 		this.moveByDirection(cc.v2(-1, 0));
 	},
-	moveOutOfScreen() {
-		Emitter.instance.emit(EnemyEventKeys.ENEMY_OUTSIDE, this.id);
-	},
 	handleOutOfBounds() {
 		this.stopWalkAnimation();
 		this.node.destroy();
 	},
-	hitObstacle() {
-		Emitter.instance.emit(EnemyEventKeys.ENEMY_HIT_OBSTACLE, this.id);
-	},
-	handleHitObstacle() {},
+	handleHitObstacle() {
 
-	onCollisionEnter(other, self) {
-		const otherType = other.node.group;
-		switch (otherType) {
-			case EntityGroup.Boundary:
-				this.moveOutOfScreen();
-				break;
-			case EntityGroup.Obstacle:
-				this.hitObstacle();
-				break;
-		}
 	},
+	emitHitEvent(other, self) {
+		const collision = EntityCollision.createFromCollision(other, self);
+		Emitter.instance.emit(EnemyEventKeys.ENEMY_HIT_ENTITY, collision);
+	},
+	onCollisionEnter(other, self) {
+		switch (other.node.group) {
+			case EntityGroup.Boundary:
+			case EntityGroup.Obstacle:
+				this.emitHitEvent(other, self);
+				break;
+			default:
+
+		}
+	}
 });

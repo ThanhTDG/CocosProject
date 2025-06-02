@@ -19,9 +19,7 @@ cc.Class({
 	initialize() {
 		this.prefabMap = new Map();
 		this.effects = [];
-
 		this.initializePrefabMap();
-		this.registerEvents();
 	},
 	initializePrefabMap() {
 		for (let i = 0; i < this.effectPrefabs.length; i++) {

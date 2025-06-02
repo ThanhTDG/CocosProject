@@ -5,9 +5,13 @@ cc.Class({
 
     onLoad() {
         this.eventManager = new EventManager();
+        this.registerEvents();
     },
     onDestroy() {
         this.removeAllEvents();
+    },
+    registerEvents() {
+
     },
     registerEvent(eventKey, eventHandler) {
         this.eventManager.registerEvent(eventKey, eventHandler);

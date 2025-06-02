@@ -1,9 +1,10 @@
 const { validateVector } = require("../../utils/vectorUtils");
 const { BulletType } = require("./bulletType");
 const { EntityType, EntityGroup } = require("../entityType");
-const mEmitter = require("../../events/mEmitter");
+const Emitter = require("../../events/mEmitter");
+const { BULLET_HIT_ENTITY } = require("../../events/keys/bulletEventKeys");
+const { EntityCollision } = require("../entityCollision");
 const { BulletStats } = require("./bulletStats");
-const { BULLET_HIT } = require("../../events/keys/bulletEventKeys");
 
 cc.Class({
 	extends: cc.Component,
@@ -14,7 +15,7 @@ cc.Class({
 			default: EntityType.Bullet,
 			tooltip: "Type of the entity (Bullet, Enemy, etc.)",
 		},
-		BulletType: {
+		bulletType: {
 			type: cc.Enum(BulletType),
 			default: BulletType.Normal,
 			tooltip: "Type of the bullet (Normal, Explosive, etc.)",
@@ -28,6 +29,7 @@ cc.Class({
 			tooltip: "Damage dealt by the bullet",
 		},
 	},
+
 	update(dt) {
 		this.move(dt);
 	},
@@ -41,22 +43,40 @@ cc.Class({
 			cc.error("Direction is not defined for bullet movement.");
 		}
 	},
+	setId(id) {
+		this.id = id;
+	},
+	getId() {
+		return this.id;
+	},
+	handleHitEnemy() {
+		this.node.destroy();
+	},
 	shoot(direction) {
 		this.node.direction = validateVector(direction);
 	},
-	emitHitEvent(group, id) {
-		const bulletStats = new BulletStats({
-			damage: this.damage,
-			speed: this.speed,
-			targetId: id,
-			targetType: group,
-			position: this.node.position,
-		});
-		mEmitter.instance.emit(BULLET_HIT, bulletStats);
+	emitHitEvent(other, self) {
+		const collision = EntityCollision.createFromCollision(other, self);
+		Emitter.instance.emit(BULLET_HIT_ENTITY, collision);
+	},
+	getStats() {
+		return BulletStats.formComponent(this);
+	},
+
+	handleHitEntity() {
+		this.node.destroy();
 	},
 	onCollisionEnter(other, self) {
 		const group = other.node.group;
-		let id = other.node.id;
-		this.emitHitEvent(group, id);
+		switch (group) {
+			case EntityGroup.Boundary:
+			case EntityGroup.Enemy:
+				this.emitHitEvent(other, self);
+				break;
+			default:
+
+		}
+
+
 	},
 });

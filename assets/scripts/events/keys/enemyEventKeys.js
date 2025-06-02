@@ -1,0 +1,2 @@
+export const ENEMY_OUTSIDE = "ENEMY_OUTSIDE";
+export const ENEMY_HIT_OBSTACLE = "ENEMY_HIT_OBSTACLE";

@@ -7,7 +7,7 @@ export const scenarioTest = (() => {
 
 	const scenario = [];
 	const xPosition = 1400;
-	let yPosition = 600;
+	let yPosition = 500;
 
 	for (let i = 0; i < totalEnemies; i++) {
 		scenario.push({
@@ -16,8 +16,6 @@ export const scenarioTest = (() => {
 			position: new cc.Vec2(xPosition, yPosition),
 			delay: i * delayBetweenSpawns,
 		});
-
-		yPosition -= 30;
 	}
 	return scenario;
 })();

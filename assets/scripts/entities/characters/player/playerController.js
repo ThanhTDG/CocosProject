@@ -1,15 +1,83 @@
-// Learn cc.Class:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/class.html
-// Learn Attribute:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-
+const EventController = require("events/eventController");
+const { Stats } = require("../stats");
+const Player = require("./player");
+const Emitter = require("../../../events/mEmitter");
+const { InitBullet } = require("../../bullet/initBullet");
+const { BulletType } = require("../../bullet/bulletType");
+const BulletEventKeys = require("../../../events/keys/bulletEventKeys");
+const { PlayerStats } = require("./playerStats");
 cc.Class({
-	extends: cc.Component,
+	extends: EventController,
 
-	properties: {},
+	properties: {
+		playerPrefab: {
+			default: null,
+			type: cc.Prefab,
+			tooltip: "Prefab for the player character",
+		},
+
+	},
+
+	onLoad() {
+		this._super();
+		this.initialize();
+		this.testShoots();
+	},
+	testShoots() {
+		this.schedule(this.testShoot, 3);
+	},
+	testShoot() {
+		let initBullet = new InitBullet({
+			direction: cc.v2(1, 0),
+			worldPosition: cc.v2(0, 500),
+			bulletType: BulletType.Normal,
+		})
+		Emitter.instance.emit(BulletEventKeys.SPAWN_BULLET, initBullet);
+	},
+
+	initialize() {
+		this.player = null;
+		this.spawnPlayer();
+	},
+
+	spawnPlayer(level = 1, worldPosition = null) {
+		const node = this.createPlayerNode();
+		const playerScript = this.getPlayerScript(node);
+		if (!playerScript) return;
+		this.initStats(playerScript, level);
+		this.addPlayerToScene(node);
+		this.setPlayerPosition(playerScript, worldPosition);
+		this.player = playerScript;
+	},
+
+	createPlayerNode() {
+		return cc.instantiate(this.playerPrefab);
+	},
+
+	getPlayerScript(node) {
+		const script = node.getComponent(Player);
+		if (!script) {
+			cc.error("Player script not found on prefab!");
+			return null;
+		}
+		return script;
+	},
+
+	addPlayerToScene(node) {
+		this.node.addChild(node);
+	},
+
+	setPlayerPosition(playerScript, worldPosition) {
+		if (worldPosition) {
+			const localPosition = this.node.convertToNodeSpaceAR(worldPosition);
+			playerScript.setPosition(localPosition);
+		}
+	},
+
+	initStats(playerScript, level) {
+		const stats = new PlayerStats(level);
+		playerScript.setStats(stats);
+	},
+
+
 });

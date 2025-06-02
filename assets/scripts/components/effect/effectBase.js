@@ -4,7 +4,6 @@ cc.Class({
 	properties: {
 		effectType: {
 			default: "",
-			type: cc.String,
 			tooltip: "Effect type identifier",
 		},
 		duration: {
@@ -33,8 +32,8 @@ cc.Class({
 		animation.play();
 	},
 
-	customAnimation() {},
-	stopCustomAnimation() {},
+	customAnimation() { },
+	stopCustomAnimation() { },
 
 	destroyEffect() {
 		if (this.animation) {
@@ -45,7 +44,7 @@ cc.Class({
 		this.node.destroy();
 	},
 
-	onEffectStart() {},
+	onEffectStart() { },
 
-	onEffectEnd() {},
+	onEffectEnd() { },
 });

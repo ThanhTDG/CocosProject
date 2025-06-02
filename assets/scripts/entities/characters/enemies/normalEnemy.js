@@ -11,8 +11,4 @@ cc.Class({
             tooltip: "Type of the enemy (Normal, Boss, MiniBoss)",
         },
     },
-    onLoad() {
-    },
-
-
 });

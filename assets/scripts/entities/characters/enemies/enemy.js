@@ -11,6 +11,7 @@ const EnemyState = cc.Enum({
 	Moving: "Moving",
 	Hit: "Hit",
 	Dead: "Dead",
+	Outside: "Outside"
 })
 
 cc.Class({
@@ -38,15 +39,14 @@ cc.Class({
 				{ name: 'hit', from: [EnemyState.Moving, EnemyState.Hit], to: EnemyState.Hit },
 				{ name: 'recover', from: EnemyState.Hit, to: EnemyState.Moving },
 				{ name: 'die', from: EnemyState.Hit, to: EnemyState.Dead },
-				{ name: 'outside', from: [EnemyState.Moving, EnemyState.Hit], to: EnemyState.Dead }
+				{ name: 'moveOutOfBounds', from: [EnemyState.Moving, EnemyState.Hit], to: EnemyState.Outside }
 			],
 			methods: {
 				onMove: () => { this.handleOnMove(); },
 				onHit: () => { this.handleOnHit(); },
 				onRecover: () => { this.handleOnRecover(); },
-				onDie: () => { this.handleOnDie() },
-				onOutside: () => { this.handleOutside() },
-				onReset: () => { }
+				onDead: () => { this.handleOnDie() },
+				onMoveOutOfBounds: () => { this.handleOutside() },
 			}
 		});
 	},
@@ -117,13 +117,6 @@ cc.Class({
 		this.stats.setHealth(hp);
 		this.stateMachine.hit();
 	},
-	moveOutOfBounds() {
-		const isMoving = this.stateMachine.is(EnemyState.Moving);
-		if (!isMoving) {
-			return;
-		}
-		this.stateMachine.outside();
-	},
 	startWalkAnimation() {
 		this.background = this.node.getChildByName("background");
 		this.walkTween = cc
@@ -147,7 +140,7 @@ cc.Class({
 		this.moveByDirection(cc.v2(-1, 0));
 	},
 	handleOutOfBounds() {
-		this.stateMachine.outside();
+		this.stateMachine.moveOutOfBounds();
 	},
 	emitHitEvent(other, self) {
 		const collision = EntityCollision.createFromCollision(other, self);
@@ -162,5 +155,8 @@ cc.Class({
 			default:
 
 		}
+	},
+	onDestroy() {
+		cc.log("Enemy destroyed: ", this.node.name);
 	}
 });

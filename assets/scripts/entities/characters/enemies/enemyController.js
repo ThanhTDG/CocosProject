@@ -132,7 +132,7 @@ cc.Class({
 
 	handleHitBoundary(id) {
 		const { enemy, index } = this.getEnemyById(id);
-		enemy.moveOutOfBounds();
+		enemy.handleOutOfBounds();
 		this.listSpawned.splice(index, 1);
 	},
 	findIndexById(id) {

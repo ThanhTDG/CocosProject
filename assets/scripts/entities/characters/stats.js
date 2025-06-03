@@ -12,4 +12,10 @@ export class Stats {
 		this.defense += scale.defense * (level - 1);
 		this.speed += scale.speed * (level - 1);
 	}
+	setHealth(health) {
+		this.health = health > 0 ? health : 0;
+	}
+	getHealth() {
+		return this.health;
+	}
 }
